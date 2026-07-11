@@ -4,8 +4,6 @@ import viteLogo from "./assets/vite.svg";
 import heroImg from "./assets/hero.png";
 import "./App.css";
 
-const unusedValue = "This should cause a lint error";
-
 function App() {
   const [count, setCount] = useState(0);
 
