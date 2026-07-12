@@ -5,6 +5,7 @@ import heroImg from "./assets/hero.png";
 import "./App.css";
 
 function App() {
+  const appEnvironment = import.meta.env.VITE_APP_ENV || "local";
   const [count, setCount] = useState(0);
 
   return (
@@ -17,6 +18,9 @@ function App() {
         </div>
         <div>
           <h1>Automatic Deployment Test</h1>
+          <p>
+            Environment: <strong>{appEnvironment}</strong>
+          </p>
           <p>
             Edit <code>src/App.jsx</code> and save to test <code>HMR</code>
           </p>
