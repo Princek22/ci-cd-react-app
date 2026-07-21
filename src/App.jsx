@@ -3,10 +3,23 @@ import reactLogo from "./assets/react.svg";
 import viteLogo from "./assets/vite.svg";
 import heroImg from "./assets/hero.png";
 import "./App.css";
+import { getHealth } from "./api";
 
 function App() {
   const appEnvironment = import.meta.env.VITE_APP_ENV || "local";
   const [count, setCount] = useState(0);
+  const [backendStatus, setBackendStatus] = useState("Not checked");
+
+  const checkBackend = async () => {
+    setBackendStatus("Checking...");
+
+    try {
+      const data = await getHealth();
+      setBackendStatus(`${data.status} (${data.environment})`);
+    } catch {
+      setBackendStatus("Backend unavailable");
+    }
+  };
 
   return (
     <>
@@ -16,6 +29,11 @@ function App() {
           <img src={reactLogo} className="framework" alt="React logo" />
           <img src={viteLogo} className="vite" alt="Vite logo" />
         </div>
+        <button type="button" onClick={checkBackend}>
+          Check backend
+        </button>
+
+        <p>Backend status: {backendStatus}</p>
         <div>
           <h1>Automatic Deployment Test</h1>
           <p>
