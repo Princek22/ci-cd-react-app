@@ -46,6 +46,25 @@ pipeline {
                 }
             }
         }
+
+        stage("Docker CLI check") {
+            steps {
+                sh "docker --version"
+                sh "docker ps"
+            }
+        }
+
+        stage("Build frontend Docker image") {
+            steps {
+                sh "docker build -t ci-cd-frontend:jenkins-${BUILD_NUMBER} ."
+            }
+        }
+
+        stage("Build backend Docker image") {
+            steps {
+                sh "docker build -t ci-cd-backend:jenkins-${BUILD_NUMBER} ./backend"
+            }
+        }
     }
 
     post {
