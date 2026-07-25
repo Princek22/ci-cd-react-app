@@ -65,6 +65,36 @@ pipeline {
                 sh "docker build -t ci-cd-backend:jenkins-${BUILD_NUMBER} ./backend"
             }
         }
+
+        stage("Push Docker images to GHCR") {
+    steps {
+        withCredentials([
+            usernamePassword(
+                credentialsId: "ghcr-creds",
+                usernameVariable: "GHCR_USER",
+                passwordVariable: "GHCR_TOKEN"
+            )
+        ]) {
+            sh '''
+                echo "$GHCR_TOKEN" | docker login ghcr.io \
+                    -u "$GHCR_USER" \
+                    --password-stdin
+
+                docker tag ci-cd-frontend:jenkins-${BUILD_NUMBER} \
+                    ghcr.io/princek22/ci-cd-frontend:jenkins-${BUILD_NUMBER}
+
+                docker tag ci-cd-backend:jenkins-${BUILD_NUMBER} \
+                    ghcr.io/princek22/ci-cd-backend:jenkins-${BUILD_NUMBER}
+
+                docker push ghcr.io/princek22/ci-cd-frontend:jenkins-${BUILD_NUMBER}
+
+                docker push ghcr.io/princek22/ci-cd-backend:jenkins-${BUILD_NUMBER}
+
+                docker logout ghcr.io
+            '''
+        }
+    }
+}
     }
 
     post {
