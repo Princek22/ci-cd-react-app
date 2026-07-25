@@ -37,10 +37,11 @@ pipeline {
             }
         }
 
-        stage("Backend syntax check") {
+        stage("Backend tests") {
             steps {
-                dir("backend") {
-                    sh "npm ci --omit=dev"
+               dir("backend") {
+                    sh "npm ci"
+                    sh "npm test"
                     sh "node --check src/server.js"
                 }
             }
