@@ -27,6 +27,13 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
+      - name: Audit frontend dependencies
+        run: npm audit --audit-level=high
+
+      - name: Audit backend dependencies
+        working-directory: backend
+        run: npm audit --audit-level=high
+
       - name: Run ESLint
         run: npm run lint
 
@@ -35,6 +42,13 @@ jobs:
 
       - name: Build application
         run: npm run build
+
+      - name: Backend tests
+        working-directory: backend
+        run: |
+          npm ci
+          npm test
+          node --check src/server.js
 
       - name: Build Docker image
         run: docker build --tag ci-cd-react-app:${{ github.sha }} .
